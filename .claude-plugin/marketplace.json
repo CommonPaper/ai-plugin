@@ -1,0 +1,15 @@
+{
+  "name": "commonpaper",
+  "owner": {
+    "name": "Common Paper",
+    "url": "https://commonpaper.com"
+  },
+  "description": "Official Common Paper plugin for Claude: contract search, sending, templates, custom terms, and account onboarding.",
+  "plugins": [
+    {
+      "name": "commonpaper",
+      "source": "./",
+      "description": "Query, create, and manage contracts in Common Paper."
+    }
+  ]
+}
