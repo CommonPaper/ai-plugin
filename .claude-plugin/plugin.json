@@ -8,7 +8,7 @@
     "url": "https://commonpaper.com"
   },
   "homepage": "https://help.commonpaper.com/en/articles/14627004-common-paper-and-llms",
-  "repository": "https://github.com/CommonPaper/claude-plugin",
+  "repository": "https://github.com/CommonPaper/commonpaper-plugin",
   "license": "MIT",
   "keywords": [
     "contracts",
