@@ -1,6 +1,6 @@
 # Common Paper REST API Reference (fallback path)
 
-Use this reference only when the Common Paper MCP tools can't do the job: the connector isn't connected, you need a filter or sort the MCP `list-agreements` tool doesn't expose (company name, end date, deal value, signer), you're uploading a Word file as custom terms, or you're provisioning a brand-new account. Everything here goes through `curl` in the shell, so it needs network access to `api.commonpaper.com` from the environment you're running in. If a request fails with a network or proxy error (not an HTTP status), tell the user the REST fallback isn't reachable here and do what you can with the MCP tools instead.
+Use this reference only when the Common Paper MCP tools can't do the job: the connector isn't connected, you need a filter or sort the MCP `list-agreements` tool doesn't expose (company name, end date, deal value, signer), you're uploading a Word file as custom terms, or you're provisioning a brand-new account. Everything here goes through `curl` in the shell, so it needs network access to `api.commonpaper.com` from the environment you're running in. If a request fails with a network or proxy error (not an HTTP status), tell the user the REST fallback isn't reachable here and do what you can with the MCP tools instead. If you can't run shell commands at all, the REST fallback isn't available; say which part of the request needs it.
 
 ## Authentication
 

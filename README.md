@@ -74,7 +74,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 
 | Problem | Fix |
 |---|---|
-| Claude says the Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. |
+| Claude says the Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Other clients: connect `https://api.commonpaper.com/mcp` from the client's MCP settings. |
 | An agreement you expect is missing | The API only covers agreements sent by your organization. Agreements you received from another organization aren't included. |
 | "You've reached your plan limit" on a new account | Usually means your email address isn't verified yet. Verify it, then try again. |
 | 404 on custom terms or custom templates | The feature isn't enabled for your organization. Contact Common Paper support. |
