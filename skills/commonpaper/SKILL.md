@@ -1,6 +1,6 @@
 ---
 name: commonpaper
-description: Query and manage contracts in Common Paper. Use when the user asks about their contracts, agreements, signers, NDAs, CSAs, renewals, deal values, or wants to create/send/void/reassign agreements. Also use when the user mentions "Common Paper" or "commonpaper", asks contract questions like "how many signed contracts do I have?" or "do I have an NDA with X?", wants to create or update agreement templates, custom terms, or custom templates, wants to onboard or set up a Common Paper account, or asks about uploading attachments.
+description: Query and manage contracts in Common Paper. Use when the user asks about their contracts, agreements, signers, NDAs, CSAs, renewals, deal values, or wants to create/edit/send/void/reassign agreements. Also use when the user mentions "Common Paper" or "commonpaper", asks contract questions like "how many signed contracts do I have?" or "do I have an NDA with X?", wants to create or update agreement templates, custom terms, or custom templates, wants to onboard or set up a Common Paper account, or asks about uploading attachments.
 ---
 
 # Common Paper
@@ -55,6 +55,7 @@ All tools take their inputs as `queryParams`, `pathParams` (the `id`), and/or `b
 | `list-agreements` | `queryParams`: `filter[agreement_type_eq]`, `filter[status_eq]`, `filter[created_at_gteq]` / `filter[created_at_lteq]` (ISO 8601 date-time), `filter[recipient_email_eq]` / `filter[recipient_email_cont]`, `full`, `page[number]`, `page[size]`. No other filters are accepted. |
 | `get-agreement` | Full details for one agreement |
 | `create-agreement` | Create from a standard, uploaded PDF, or custom template (see Creating an Agreement) |
+| `update-draft-agreement` | Edit a draft in place (draft status only; see Editing a Draft) |
 | `send-agreement` | Send a draft (draft status only) |
 | `void-agreement` | Void an agreement |
 | `reassign-agreement` | New recipient: `body.agreement.recipient_name`, `recipient_email`, optional `add_recipient_as_cc`, `comments` |
@@ -111,13 +112,28 @@ Prefer `display_status` over `status` when presenting results.
    - Optional: `cc_users`, `agreement.message`, `agreement.test_agreement`, governing law fields, billing fields, expiration fields, and type-specific overrides such as `csa_attributes` or `csa_order_form_attributes`
    - For a custom template, put cover page answers in `agreement.custom_field_values`, keyed by the template's YAML field keys (governing law answers go there too)
 5. **Show the user the draft link** (`links.agreement_url`) and ask whether to send it.
-6. **Send only after they confirm**, with `send-agreement`.
+6. **If they want changes, edit the draft** with `update-draft-agreement` (see Editing a Draft). Don't void and recreate it.
+7. **Send only after they confirm**, with `send-agreement`.
 
 **Always default to `draft: true`.** Only send immediately when the user explicitly says so, and restate that the email goes out right away before calling the tool.
 
 `test_agreement: true` sends a real email and looks identical to a live agreement, but it's marked not legally binding and doesn't count against the monthly limit. It's a good first send for a new template.
 
 **Introducing Common Paper to a counterparty:** agreements use a Cover Page + Standard Terms structure. For counterparties new to that model, suggest an `agreement.message` such as "This is a Common Paper standard agreement. The terms are published at https://commonpaper.com/standards. Only the cover page is specific to this deal." Common Paper also publishes a one-page explainer, ["Why We Use Common Paper Standard Agreements"](https://commonpaper.com/wp-content/uploads/2022/05/Why-We-Use-Common-Paper-Standard-Agreements.pdf).
+
+## Editing a Draft
+
+`update-draft-agreement` edits a draft in place. It only works on agreements in `draft` status. Once an agreement is sent, the options are reassign, void, or void and create a new draft.
+
+- **Send only what changes** in `body.agreement`. Omitted fields keep their current values.
+- **Type-specific terms need their id.** To change a type's term object (`csa_attributes` and `csa_order_form_attributes` for a CSA, `design_partner_attributes` for a Design, and so on), call `get-agreement` first and include that term's existing `id`, or the request is rejected. NDA terms (`purpose`, `term`, `confidentiality_period`) live directly on the agreement and need no id.
+- **Drafts from a custom template** have no term object. Their fields live in `agreement.custom_field_values`.
+- **Some fields replace a whole list.** `attachment_ids` replaces the current attachments, so send the full list you want. Setting `include_cc_users` to `false` removes every cc'd person.
+- **CC users** are managed through `agreement_roles_attributes` with `role: "cc"`, by email only: add someone with `user_attributes.email` and no `id`; remove someone with their role's `id` and a blank email. Requires `include_cc_users: true`.
+- **Signer:** `default_signer_email` must belong to a user in the organization (check with `list-users`). Anyone else returns a 400.
+- **Subsidiary:** omit `subsidiary_id` to leave it alone; `null` or an empty string clears it.
+
+Confirm the changes with the user, make the edit, then show the draft link again before asking whether to send.
 
 ## Other Write Operations
 
