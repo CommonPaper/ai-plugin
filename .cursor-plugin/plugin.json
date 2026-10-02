@@ -17,5 +17,6 @@
     "e-signature",
     "clm",
     "common-paper"
-  ]
+  ],
+  "logo": "assets/logo.png"
 }

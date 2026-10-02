@@ -96,6 +96,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 .cursor-plugin/marketplace.json     Lets this repo be added as a marketplace (Cursor)
 .mcp.json                           Common Paper MCP connector (Claude)
 mcp.json                            Common Paper MCP connector (Cursor)
+assets/logo.png                     Plugin logo
 skills/commonpaper/SKILL.md         Core skill
 skills/commonpaper/references/      REST API, templates, custom terms, onboarding details
 ```
