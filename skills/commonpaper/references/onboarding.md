@@ -185,7 +185,7 @@ Before creating, verify the signer email with the `list-users` tool (`filter[ema
 - **PSA**: `template_psa_statement_of_work_attributes.services_description`
 - **Pilot**: set `product_description` so the template has context
 
-**CSA invoice payment trap**: when v2 CSA uses `payment_process_type: "invoice"`, you must set all three of `payment_process_type_invoice_type`, `payment_process_type_invoice_amount`, and `payment_process_type_invoice_duration` inside `template_csa_order_form_attributes`. Missing the amount/duration will not error on template create but will crash with `pluralize(nil, nil)` the moment someone previews an agreement built from the template. For net-30 annual: `{ invoice_type: "annually", invoice_amount: 30, invoice_duration: "day" }`.
+**CSA invoice payment trap**: when v2 CSA uses `payment_process_type: "invoice"`, you must set all three of `payment_process_type_invoice_type`, `payment_process_type_invoice_amount`, and `payment_process_type_invoice_duration` inside `template_csa_order_form_attributes`. Missing the amount/duration will not error on template create, but previewing an agreement built from the template will fail. For net-30 annual: `{ invoice_type: "annually", invoice_amount: 30, invoice_duration: "day" }`.
 
 **AI addendum**: requires uploading a PDF via `POST /v1/attachments` first, then setting `include_ai_addendum: true` and `include_ai_addendum_attachment_id` on the CSA template. Do not attempt to enable it without a valid attachment ID.
 

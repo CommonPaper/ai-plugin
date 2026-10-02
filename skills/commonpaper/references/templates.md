@@ -170,7 +170,7 @@ All other fields in the request body are optional and set the defaults pre-fille
 - `include_pilot_period_duration_type` — e.g., `"day(s)"`, `"month(s)"`
 - `include_pilot_period_include_fees` — boolean; whether pilot period has fees
 
-**Important**: when `payment_process_type` is `"invoice"`, you MUST set all of `payment_process_type_invoice_type`, `payment_process_type_invoice_amount`, and `payment_process_type_invoice_duration`. Missing the amount/duration crashes the agreement preview when the template is used (the presenter calls `pluralize(nil, nil)` and raises). For net-30 annual billing, that's `{ invoice_type: "annually", invoice_amount: 30, invoice_duration: "day" }`.
+**Important**: when `payment_process_type` is `"invoice"`, you MUST set all of `payment_process_type_invoice_type`, `payment_process_type_invoice_amount`, and `payment_process_type_invoice_duration`. Missing the amount/duration doesn't error when the template is saved, but previewing an agreement built from the template will fail. For net-30 annual billing, that's `{ invoice_type: "annually", invoice_amount: 30, invoice_duration: "day" }`.
 
 **CSA fees (v2)**: v2 CSAs support structured fee line items as an array under `fees_attributes`. Each fee has a `type` field:
 
