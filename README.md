@@ -40,7 +40,7 @@ Install **Common Paper** from the plugin directory, then connect when prompted a
 Install from the plugin directory with `/plugin`, or add this repo as a marketplace directly:
 
 ```bash
-claude plugin marketplace add CommonPaper/claude-plugin
+claude plugin marketplace add CommonPaper/commonpaper-plugin
 claude plugin install commonpaper@commonpaper
 ```
 
@@ -57,7 +57,7 @@ To try a local copy, clone this repo into `~/.cursor/plugins/local/commonpaper`.
 Add this repo as a marketplace and install the plugin. `--trust` lets Grok attach the bundled Common Paper connector.
 
 ```bash
-grok plugin marketplace add CommonPaper/claude-plugin
+grok plugin marketplace add CommonPaper/commonpaper-plugin
 grok plugin install commonpaper --trust
 grok plugin enable commonpaper
 ```
@@ -67,7 +67,7 @@ Then sign in to Common Paper when Grok prompts you to connect `common-paper`.
 ### Gemini CLI
 
 ```bash
-gemini extensions install https://github.com/CommonPaper/claude-plugin
+gemini extensions install https://github.com/CommonPaper/commonpaper-plugin
 ```
 
 Then run `/mcp auth common-paper` in Gemini CLI and sign in to Common Paper.
