@@ -1,6 +1,6 @@
-# Common Paper plugin for Claude and Cursor
+# Common Paper plugin for Claude, Cursor, and Grok Build
 
-Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from Claude Cowork, Claude Code, and Cursor, in plain English.
+Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from Claude Cowork, Claude Code, Cursor, and Grok Build, in plain English.
 
 The plugin bundles two things:
 
@@ -52,6 +52,18 @@ Install **Common Paper** from the Cursor Marketplace, or add this repo to your t
 
 To try a local copy, clone this repo into `~/.cursor/plugins/local/commonpaper`.
 
+### Grok Build
+
+Add this repo as a marketplace and install the plugin. `--trust` lets Grok attach the bundled Common Paper connector.
+
+```bash
+grok plugin marketplace add CommonPaper/claude-plugin
+grok plugin install commonpaper --trust
+grok plugin enable commonpaper
+```
+
+Then sign in to Common Paper when Grok prompts you to connect `common-paper`.
+
 ### Upgrading from the standalone skill
 
 If you previously installed [CommonPaper/claude-skill](https://github.com/CommonPaper/claude-skill), you can remove it after installing the plugin. If the plugin ever needs an API key for the REST fallback, it copies a key saved by the old skill to `~/.config/commonpaper/cp-api-token` automatically.
@@ -59,7 +71,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 ## Requirements
 
 - A [Common Paper](https://commonpaper.com) account
-- Claude Cowork, Claude Code, or Cursor
+- Claude Cowork, Claude Code, Cursor, or Grok Build
 - For the REST fallback only: `curl` and network access to `api.commonpaper.com`. Custom terms and custom templates must be enabled for your organization to use those features.
 
 ## Security and privacy
@@ -90,11 +102,12 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 ## Plugin contents
 
 ```
-.claude-plugin/plugin.json          Plugin manifest (Claude)
+.claude-plugin/plugin.json          Plugin manifest (Claude, Grok Build)
 .claude-plugin/marketplace.json     Lets this repo be added as a marketplace (Claude)
 .cursor-plugin/plugin.json          Plugin manifest (Cursor)
 .cursor-plugin/marketplace.json     Lets this repo be added as a marketplace (Cursor)
-.mcp.json                           Common Paper MCP connector (Claude)
+.grok-plugin/marketplace.json       Lets this repo be added as a marketplace (Grok Build)
+.mcp.json                           Common Paper MCP connector (Claude, Grok Build)
 mcp.json                            Common Paper MCP connector (Cursor)
 assets/logo.png                     Plugin logo
 skills/commonpaper/SKILL.md         Core skill
