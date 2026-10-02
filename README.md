@@ -1,6 +1,6 @@
-# Common Paper plugin for Claude
+# Common Paper plugin for Claude and Cursor
 
-Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from Claude Cowork and Claude Code, in plain English.
+Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from Claude Cowork, Claude Code, and Cursor, in plain English.
 
 The plugin bundles two things:
 
@@ -46,6 +46,12 @@ claude plugin install commonpaper@commonpaper
 
 Then run `/mcp`, choose `common-paper`, and sign in to Common Paper.
 
+### Cursor
+
+Install **Common Paper** from the Cursor Marketplace, or add this repo to your team marketplace (Dashboard > Plugins & MCPs). Then open the Customize page, find `common-paper` under MCP servers, and sign in to Common Paper.
+
+To try a local copy, clone this repo into `~/.cursor/plugins/local/commonpaper`.
+
 ### Upgrading from the standalone skill
 
 If you previously installed [CommonPaper/claude-skill](https://github.com/CommonPaper/claude-skill), you can remove it after installing the plugin. If the plugin ever needs an API key for the REST fallback, it copies a key saved by the old skill to `~/.config/commonpaper/cp-api-token` automatically.
@@ -53,7 +59,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 ## Requirements
 
 - A [Common Paper](https://commonpaper.com) account
-- Claude Cowork, or Claude Code
+- Claude Cowork, Claude Code, or Cursor
 - For the REST fallback only: `curl` and network access to `api.commonpaper.com`. Custom terms and custom templates must be enabled for your organization to use those features.
 
 ## Security and privacy
@@ -68,7 +74,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 
 | Problem | Fix |
 |---|---|
-| Claude says the Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. |
+| Claude says the Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. |
 | An agreement you expect is missing | The API only covers agreements sent by your organization. Agreements you received from another organization aren't included. |
 | "You've reached your plan limit" on a new account | Usually means your email address isn't verified yet. Verify it, then try again. |
 | 404 on custom terms or custom templates | The feature isn't enabled for your organization. Contact Common Paper support. |
@@ -84,9 +90,12 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 ## Plugin contents
 
 ```
-.claude-plugin/plugin.json          Plugin manifest
-.claude-plugin/marketplace.json     Lets this repo be added as a marketplace
-.mcp.json                           Common Paper MCP connector
+.claude-plugin/plugin.json          Plugin manifest (Claude)
+.claude-plugin/marketplace.json     Lets this repo be added as a marketplace (Claude)
+.cursor-plugin/plugin.json          Plugin manifest (Cursor)
+.cursor-plugin/marketplace.json     Lets this repo be added as a marketplace (Cursor)
+.mcp.json                           Common Paper MCP connector (Claude)
+mcp.json                            Common Paper MCP connector (Cursor)
 skills/commonpaper/SKILL.md         Core skill
 skills/commonpaper/references/      REST API, templates, custom terms, onboarding details
 ```

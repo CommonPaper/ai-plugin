@@ -1,0 +1,21 @@
+{
+  "name": "commonpaper",
+  "version": "1.0.0",
+  "description": "Query, create, and manage contracts in Common Paper. Bundles the Common Paper MCP connector (OAuth) with a skill that covers agreement search, sending, templates, custom terms, renewals, and guided account onboarding.",
+  "author": {
+    "name": "Common Paper",
+    "url": "https://commonpaper.com"
+  },
+  "homepage": "https://help.commonpaper.com/en/articles/14627004-common-paper-and-llms",
+  "repository": "https://github.com/CommonPaper/claude-plugin",
+  "license": "MIT",
+  "keywords": [
+    "contracts",
+    "legal",
+    "agreements",
+    "nda",
+    "e-signature",
+    "clm",
+    "common-paper"
+  ]
+}
