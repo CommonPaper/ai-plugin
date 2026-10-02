@@ -1,6 +1,6 @@
-# Common Paper plugin for Claude, Cursor, and Grok Build
+# Common Paper plugin for Claude, Cursor, Grok Build, and Gemini CLI
 
-Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from Claude Cowork, Claude Code, Cursor, and Grok Build, in plain English.
+Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from Claude Cowork, Claude Code, Cursor, Grok Build, and Gemini CLI, in plain English.
 
 The plugin bundles two things:
 
@@ -64,6 +64,14 @@ grok plugin enable commonpaper
 
 Then sign in to Common Paper when Grok prompts you to connect `common-paper`.
 
+### Gemini CLI
+
+```bash
+gemini extensions install https://github.com/CommonPaper/claude-plugin
+```
+
+Then run `/mcp auth common-paper` in Gemini CLI and sign in to Common Paper.
+
 ### Upgrading from the standalone skill
 
 If you previously installed [CommonPaper/claude-skill](https://github.com/CommonPaper/claude-skill), you can remove it after installing the plugin. If the plugin ever needs an API key for the REST fallback, it copies a key saved by the old skill to `~/.config/commonpaper/cp-api-token` automatically.
@@ -71,7 +79,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 ## Requirements
 
 - A [Common Paper](https://commonpaper.com) account
-- Claude Cowork, Claude Code, Cursor, or Grok Build
+- Claude Cowork, Claude Code, Cursor, Grok Build, or Gemini CLI
 - For the REST fallback only: `curl` and network access to `api.commonpaper.com`. Custom terms and custom templates must be enabled for your organization to use those features.
 
 ## Security and privacy
@@ -86,7 +94,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 
 | Problem | Fix |
 |---|---|
-| Claude says the Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Other clients: connect `https://api.commonpaper.com/mcp` from the client's MCP settings. |
+| Claude says the Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Gemini CLI: run `/mcp auth common-paper`. Other clients: connect `https://api.commonpaper.com/mcp` from the client's MCP settings. |
 | An agreement you expect is missing | The API only covers agreements sent by your organization. Agreements you received from another organization aren't included. |
 | "You've reached your plan limit" on a new account | Usually means your email address isn't verified yet. Verify it, then try again. |
 | 404 on custom terms or custom templates | The feature isn't enabled for your organization. Contact Common Paper support. |
@@ -109,6 +117,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 .grok-plugin/marketplace.json       Lets this repo be added as a marketplace (Grok Build)
 .mcp.json                           Common Paper MCP connector (Claude, Grok Build)
 mcp.json                            Common Paper MCP connector (Cursor)
+gemini-extension.json               Extension manifest and connector (Gemini CLI)
 assets/logo.png                     Plugin logo
 skills/commonpaper/SKILL.md         Core skill
 skills/commonpaper/references/      REST API, templates, custom terms, onboarding details

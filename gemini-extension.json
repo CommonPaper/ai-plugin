@@ -1,0 +1,10 @@
+{
+  "name": "commonpaper",
+  "version": "1.0.0",
+  "description": "Query, create, and manage contracts in Common Paper. Bundles the Common Paper MCP connector (OAuth) with a skill that covers agreement search, sending, templates, custom terms, renewals, and guided account onboarding.",
+  "mcpServers": {
+    "common-paper": {
+      "httpUrl": "https://api.commonpaper.com/mcp"
+    }
+  }
+}
