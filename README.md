@@ -86,7 +86,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 
 - The connector uses OAuth. Claude acts as the Common Paper user who signed in and can only see that user's organization.
 - Claude confirms before anything that sends an email or changes a live agreement (send, void, reassign, resend, invite), and creates agreements as drafts by default.
-- If the REST fallback needs an API key, the plugin mints one for the signed-in user with the connector (or asks you for one), stores it at `~/.config/commonpaper/cp-api-token` with owner-only permissions, and never prints it in chat.
+- If the REST fallback needs an API key, the plugin mints one for the signed-in user with the connector (or asks you for one), asks whether to keep it for future sessions, stores it at `~/.config/commonpaper/cp-api-token` with owner-only permissions (deleting it at the end of the task if you said not to keep it), and never prints it in chat.
 - Contract text ported into custom terms is kept character-for-character. Claude verifies the stored text after writing and never "fixes" typos or punctuation on its own.
 - Privacy policy: https://commonpaper.com/privacy-policy/ (questions: privacy@commonpaper.com)
 

@@ -36,6 +36,8 @@ Before saving the token, check its format:
 
 ### Saving Credentials
 
+Every REST call reads the token from the credentials file, so it has to be written there to use it. Before writing it, ask: "Would you like me to keep this token for future sessions? If not, I'll delete it when we're done."
+
 Write the token to the credentials file, then test it with a lightweight API call:
 
 ```bash
@@ -44,7 +46,13 @@ printf '%s' 'THE_TOKEN' > ~/.config/commonpaper/cp-api-token && chmod 600 ~/.con
 curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" "https://api.commonpaper.com/v1/agreements?page%5Bsize%5D=1" -o /dev/null -w "%{http_code}"
 ```
 
-If the response is not `200`, inform the user that their token appears invalid and ask them to double-check. If the user did not want the token kept for future sessions, delete the file when the task is done.
+If the response is not `200`, inform the user that their token appears invalid and ask them to double-check.
+
+If the user said not to keep the token, delete it when the task is done:
+
+```bash
+rm -f ~/.config/commonpaper/cp-api-token
+```
 
 ### Making Requests
 
