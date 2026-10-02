@@ -5,7 +5,7 @@ description: Query and manage contracts in Common Paper. Use when the user asks 
 
 # Common Paper
 
-This plugin connects Claude to Common Paper in two ways:
+This plugin connects Claude (or Cursor) to Common Paper in two ways:
 
 1. **The Common Paper MCP connector** (bundled in this plugin, OAuth sign-in, no API key). This is the default path for everything it supports.
 2. **The Common Paper REST API over `curl`** (API key). This is the fallback for things the connector can't do. Its details live in `references/rest-api.md`.
@@ -25,7 +25,7 @@ This plugin connects Claude to Common Paper in two ways:
 **Check for the MCP tools first.** Look for Common Paper tools such as `list-agreements`, `get-me`, and `create-agreement` (their full names carry a server prefix that differs depending on whether they came from this plugin or from the connector directory). Use whichever set is available; they are the same server.
 
 - **If the tools are listed and work**, call `get-me` once to confirm who is signed in, and proceed.
-- **If the tools are listed but return an authentication error**, the user needs to sign in. In Claude Code: run `/mcp`, pick `common-paper`, and authenticate. In Cowork or claude.ai: Customize > Connectors > Common Paper > Connect.
+- **If the tools are listed but return an authentication error**, the user needs to sign in. In Claude Code: run `/mcp`, pick `common-paper`, and authenticate. In Cowork or claude.ai: Customize > Connectors > Common Paper > Connect. In Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. In Gemini CLI: run `/mcp auth common-paper`. In any other client: connect the `common-paper` MCP server (`https://api.commonpaper.com/mcp`) from that client's MCP or connector settings.
 - **If there are no Common Paper tools at all**, fall back to the REST API (`references/rest-api.md`), which asks for an API key from the Integrations tab at app.commonpaper.com.
 
 Tokens are scoped to one organization. If the user can't find an agreement they expect, it was probably sent by another organization (they were the recipient), and the API only covers agreements sent by the signed-in organization.
@@ -42,7 +42,7 @@ Tokens are scoped to one organization. If the user can't find an agreement they 
 | Porting an existing contract's text into custom terms, or uploading Word (docx) terms | REST (see `references/custom-terms-and-templates.md`) |
 | Provisioning a brand-new Common Paper account | REST (see `references/onboarding.md`) |
 
-If REST is needed and the MCP connector is connected, get a key with the `generate-api-key` tool instead of asking the user for one. If `curl` to `api.commonpaper.com` fails with a network error, the environment can't reach the REST API. Say so and do what the MCP tools allow.
+If REST is needed and the MCP connector is connected, get a key with the `generate-api-key` tool instead of asking the user for one. If `curl` to `api.commonpaper.com` fails with a network error, the environment can't reach the REST API. Say so and do what the MCP tools allow. The same applies if you can't run shell commands at all (for example in a chat-only client): REST isn't available, so say which part of the request needs it and do the rest with the MCP tools.
 
 ## MCP Tool Reference
 

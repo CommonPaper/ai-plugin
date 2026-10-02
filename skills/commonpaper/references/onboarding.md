@@ -13,12 +13,12 @@ The flow is two unauthenticated public endpoints on the gateway. No prior API ke
 ```bash
 curl -s -X POST "https://api.commonpaper.com/v1/keys" \
   -H "Content-Type: application/json" \
-  -d '{"contact_email":"YOUR_CONTACT_EMAIL","integrator_name":"claude-code"}'
+  -d '{"contact_email":"YOUR_CONTACT_EMAIL","integrator_name":"YOUR_CLIENT_NAME"}'
 ```
 
 `contact_email` is the operator/agent's email (a contact point if the key needs follow-up), not the email of the user being signed up. Throwaway domains (mailinator, tempmail, guerrillamail, 10minutemail, throwawaymail) are rejected with 422.
 
-`integrator_name` is optional metadata for attribution. Use `claude-code` when running this from the skill.
+`integrator_name` is optional metadata for attribution. Set it to the client you're running in, in lowercase kebab-case, for example `claude-code`, `claude-cowork`, `cursor`, `grok-build`, `gemini-cli`, or `codex`.
 
 The response is JSON with a one-time `key` (used as a Bearer token in Step 2), plus `key_last_four`, `contact_email`, and `integrator_name`. Capture the `key` — it's not shown again, and once redeemed it's revoked at the gateway.
 

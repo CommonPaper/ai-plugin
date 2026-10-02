@@ -1,0 +1,18 @@
+{
+  "name": "commonpaper",
+  "owner": {
+    "name": "Common Paper",
+    "url": "https://commonpaper.com"
+  },
+  "description": "Official Common Paper plugin for Grok Build: contract search, sending, templates, custom terms, and account onboarding.",
+  "plugins": [
+    {
+      "name": "commonpaper",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/CommonPaper/claude-plugin.git"
+      },
+      "description": "Query, create, and manage contracts in Common Paper."
+    }
+  ]
+}
