@@ -6,7 +6,7 @@
 
 Use this flow when the user asks to create a brand-new Common Paper account from scratch via the API — phrases like "provision a new account", "create a fresh Common Paper account", "sign me up for Common Paper", or "create an agentic signup account for X". This is for net-new orgs, not for using an existing one.
 
-The flow is two unauthenticated public endpoints on the gateway. No prior API key is needed.
+The flow is two unauthenticated public endpoints. No prior API key is needed.
 
 ### Step 1: Mint a provision key
 
@@ -20,7 +20,7 @@ curl -s -X POST "https://api.commonpaper.com/v1/keys" \
 
 `integrator_name` is optional metadata for attribution. Set it to the client you're running in, in lowercase kebab-case, for example `claude-code`, `claude-cowork`, `cursor`, `grok-build`, `gemini-cli`, or `codex`.
 
-The response is JSON with a one-time `key` (used as a Bearer token in Step 2), plus `key_last_four`, `contact_email`, and `integrator_name`. Capture the `key` — it's not shown again, and once redeemed it's revoked at the gateway.
+The response is JSON with a one-time `key` (used as a Bearer token in Step 2), plus `key_last_four`, `contact_email`, and `integrator_name`. Capture the `key` — it's not shown again, and once redeemed it's revoked.
 
 Rate limits: 5 req/minute and 50 req/day per IP. If the user is testing the flow repeatedly, expect 429s after the first few.
 
@@ -40,7 +40,7 @@ Possible non-201 responses:
 - **410 Gone** — provision key has already been redeemed (single-use; this is the most common confusion if you try to re-run Step 2 with a stale key)
 - **409 Conflict** — email is already in use
 - **422 Unprocessable Entity** — required field missing
-- **502 Bad Gateway** — Zuplo or Auth0 failure
+- **502 Bad Gateway** — an upstream service failed; wait a moment and retry
 
 ### Step 3: Install the new API key for the rest of the skill
 
