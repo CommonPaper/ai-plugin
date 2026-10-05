@@ -1,4 +1,4 @@
-# Common Paper MCP server and Claude plugin
+# Common Paper MCP server and AI plugins
 
 Query, create, and manage your contracts in [Common Paper](https://commonpaper.com) from your AI assistant, in plain English. Common Paper runs a remote MCP server that works with any MCP client, including GitHub Copilot, VS Code, Claude, Cursor, and ChatGPT.
 
