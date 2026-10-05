@@ -5,7 +5,7 @@ Query, create, and manage your contracts in [Common Paper](https://commonpaper.c
 The plugin bundles two things:
 
 - **The Common Paper MCP connector** (`https://api.commonpaper.com/mcp`). You sign in with your Common Paper account through OAuth, so there's no API key to copy or store.
-- **A Common Paper skill** that teaches Claude how Common Paper works: agreement statuses, the Cover Page + Standard Terms model, safe defaults (every agreement starts as a draft), template parameters for each agreement type, the rules for porting contract text into custom terms without altering it, and a guided onboarding flow for new accounts.
+- **A Common Paper skill** that teaches how Common Paper works: agreement statuses, the Cover Page + Standard Terms model, safe defaults (every agreement starts as a draft), template parameters for each agreement type, the rules for porting contract text into custom terms without altering it, and a guided onboarding flow for new accounts.
 
 For a few things the connector doesn't cover yet (filtering by company name or end date, uploading Word files as custom terms, and creating a brand-new account), the skill falls back to the Common Paper REST API.
 
