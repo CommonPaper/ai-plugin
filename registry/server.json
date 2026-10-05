@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.commonpaper/contracts",
+  "description": "Create, send, negotiate, sign, and track contracts with Common Paper.",
+  "title": "Common Paper",
+  "version": "1.0.1",
+  "websiteUrl": "https://commonpaper.com",
+  "repository": {
+    "url": "https://github.com/CommonPaper/commonpaper-plugin",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.commonpaper.com/mcp"
+    }
+  ]
+}
