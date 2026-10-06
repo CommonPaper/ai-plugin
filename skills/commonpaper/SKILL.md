@@ -16,7 +16,7 @@ This plugin connects Claude (or Cursor) to Common Paper in two ways:
 
 1. **Never display an API key or token in chat output**, in code blocks, or in explanations, unless the user explicitly asks to see it. This includes keys returned by the `generate-api-key` tool or by account provisioning.
 2. **Never pass a token as a literal in a shell command** except the one-time write to the credentials file. Every REST call reads it with command substitution (see `references/rest-api.md`).
-3. **When showing the user a curl command**, replace the auth header with `-H "Authorization: Bearer $CP_TOKEN"` and URL-encode brackets as `%5B` / `%5D`.
+3. **When showing the user a curl command**, replace the auth header with `-H "Authorization: Bearer <YOUR_API_TOKEN>"` and URL-encode brackets as `%5B` / `%5D`.
 4. **Sanitize user inputs** before putting them in URLs or filters. Strip or encode `&`, `=`, `#`, `?`, newlines, backticks, `$()`, and semicolons.
 5. **Confirm before any action that emails someone or changes a live agreement** (send, void, reassign, resend, invite). A Cowork user may be watching a task they didn't start, so state exactly what will happen before doing it.
 

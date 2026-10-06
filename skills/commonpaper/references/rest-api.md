@@ -348,12 +348,10 @@ Use `page[number]=N&page[size]=M` query params (URL-encoded: `page%5Bnumber%5D=N
 
 ## Common Query Patterns
 
-In all examples below, `$AUTH` refers to `-H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)"`.
-
 ### "How many signed contracts do I have?"
 
 ```bash
-curl -s $AUTH \
+curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
   "https://api.commonpaper.com/v1/agreements?filter%5Bstatus_eq%5D=signed&page%5Bsize%5D=1" | jq '.meta.pagination.records'
 ```
 
@@ -378,7 +376,7 @@ Find agreements with that company and extract signer info from attributes: `send
 Fetch all signed CSAs and sort client-side by `ai_gmv` with `jq`:
 
 ```bash
-curl -s $AUTH \
+curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
   "https://api.commonpaper.com/v1/agreements?filter%5Bagreement_type_eq%5D=CSA&filter%5Bstatus_eq%5D=signed&page%5Bsize%5D=100" \
   | jq '[.data[] | {counterparty: .attributes.recipient_organization, gmv: (.attributes.ai_gmv // "0" | tonumber), summary: .attributes.summary}] | sort_by(-.gmv)'
 ```
@@ -388,7 +386,7 @@ Note: `ai_gmv` may be `"0"` or null for some agreements even if fees exist — c
 ### "Upcoming renewal dates?"
 
 ```bash
-curl -s $AUTH \
+curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
   "https://api.commonpaper.com/v1/agreements?filter%5Bstatus_eq%5D=signed&filter%5Bend_date_gteq%5D=$(date +%Y-%m-%d)&sort=end_date&page%5Bsize%5D=100"
 ```
 
@@ -494,6 +492,6 @@ Simple PATCH to `/v1/agreements/{id}/resend_email`.
 - List endpoints for agreements and templates return compact payloads by default; pass `full=true` when you need nested type-specific attributes in list responses
 - The API uses a **different format for creates** — NOT JSONAPI. Use `owner_email`, `template_id`, and `agreement` as top-level keys.
 - Use `jq` for parsing JSON responses in curl commands
-- When showing users the curl command you used, replace the auth header with `$CP_TOKEN` placeholder and ensure brackets are URL-encoded
+- When showing users the curl command you used, replace the auth header with a `<YOUR_API_TOKEN>` placeholder and ensure brackets are URL-encoded
 - Use `display_status` instead of `status` when presenting results to users
 - The `summary` field on agreements contains a human-readable summary of key terms — useful for quick overviews
