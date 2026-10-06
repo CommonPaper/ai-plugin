@@ -7,7 +7,7 @@
     "url": "https://commonpaper.com"
   },
   "homepage": "https://help.commonpaper.com/en/articles/14627004-common-paper-and-llms",
-  "repository": "https://github.com/CommonPaper/commonpaper-plugin",
+  "repository": "https://github.com/CommonPaper/ai-plugin",
   "license": "MIT",
   "keywords": [
     "contracts",
