@@ -6,7 +6,7 @@
   "version": "1.0.1",
   "websiteUrl": "https://commonpaper.com",
   "repository": {
-    "url": "https://github.com/CommonPaper/commonpaper-plugin",
+    "url": "https://github.com/CommonPaper/ai-plugin",
     "source": "github"
   },
   "remotes": [

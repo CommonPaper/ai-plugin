@@ -10,7 +10,7 @@
       "name": "commonpaper",
       "source": {
         "source": "url",
-        "url": "https://github.com/CommonPaper/commonpaper-plugin.git"
+        "url": "https://github.com/CommonPaper/ai-plugin.git"
       },
       "description": "Query, create, and manage contracts in Common Paper."
     }
