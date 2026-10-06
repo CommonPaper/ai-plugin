@@ -7,8 +7,11 @@
     "name": "Common Paper",
     "url": "https://commonpaper.com"
   },
-  "homepage": "https://help.commonpaper.com/en/articles/14627004-common-paper-and-llms",
+  "homepage": "https://commonpaper.com",
+  "documentationUrl": "https://help.commonpaper.com/en/articles/14627004-common-paper-and-llms",
+  "supportUrl": "https://help.commonpaper.com",
   "privacyPolicyUrl": "https://commonpaper.com/privacy-policy/",
+  "termsOfServiceUrl": "https://app.commonpaper.com/terms",
   "repository": "https://github.com/CommonPaper/ai-plugin",
   "license": "MIT",
   "keywords": [
