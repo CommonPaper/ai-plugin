@@ -145,7 +145,6 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 .mcp.json                           Common Paper MCP connector (Claude, Grok Build)
 mcp.json                            Common Paper MCP connector (Cursor)
 gemini-extension.json               Extension manifest and connector (Gemini CLI)
-assets/logo.png                     Plugin logo
 registry/server.json                MCP Registry entry (com.commonpaper/contracts)
 skills/commonpaper/SKILL.md         Core skill
 skills/commonpaper/references/      REST API, templates, custom terms, onboarding details
