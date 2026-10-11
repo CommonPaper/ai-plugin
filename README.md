@@ -29,6 +29,12 @@ For a few things the connector doesn't cover yet (filtering by company name or e
 4. `Create a CSA template with Delaware law, a 1x fees liability cap, and net-30 annual invoicing.`
 5. `Set up my Common Paper account.`
 
+## Hosted models
+
+The plugin works with any MCP-capable hosted model — ChatGPT, OpenAI Codex CLI, Claude, Cursor, VS Code / GitHub Copilot, Gemini CLI, Grok Build, and any generic MCP client. All surfaces point at the same remote MCP server (`https://api.commonpaper.com/mcp`, Streamable HTTP, Common Paper OAuth — no API key).
+
+Per-host config snippets, the compatibility matrix, and the repository's merge strategy for new host surfaces live in [docs/HOSTED_MODELS.md](docs/HOSTED_MODELS.md).
+
 ## Use with any MCP client
 
 - **Server URL:** `https://api.commonpaper.com/mcp`
