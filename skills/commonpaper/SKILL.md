@@ -22,9 +22,9 @@ This plugin connects Claude (or Cursor) to Common Paper in two ways:
 
 ## Connecting
 
-**Check for the MCP tools first.** Look for Common Paper tools such as `list-agreements`, `get-me`, and `create-agreement` (their full names carry a server prefix that differs depending on whether they came from this plugin or from the connector directory). Use whichever set is available; they are the same server.
+**Check for the MCP tools first.** Look for Common Paper tools such as `list-agreements`, `get-current-user`, and `create-agreement` (their full names carry a server prefix that differs depending on whether they came from this plugin or from the connector directory). Use whichever set is available; they are the same server.
 
-- **If the tools are listed and work**, call `get-me` once to confirm who is signed in, and proceed.
+- **If the tools are listed and work**, call `get-current-user` once to confirm who is signed in, and proceed.
 - **If the tools are listed but return an authentication error**, the user needs to sign in. In Claude Code: run `/mcp`, pick `common-paper`, and authenticate. In Cowork or claude.ai: Customize > Connectors > Common Paper > Connect. In Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. In Gemini CLI: run `/mcp auth common-paper`. In any other client: connect the `common-paper` MCP server (`https://api.commonpaper.com/mcp`) from that client's MCP or connector settings.
 - **If there are no Common Paper tools at all**, fall back to the REST API (`references/rest-api.md`), which asks for an API key from the Integrations tab at app.commonpaper.com.
 
@@ -69,7 +69,7 @@ All tools take their inputs as `queryParams`, `pathParams` (the `id`), and/or `b
 
 | Tool | Use |
 |---|---|
-| `get-me` | The signed-in user |
+| `get-current-user` | The signed-in user |
 | `list-organizations` / `get-organization` / `update-organization` | Org name, address, notice and nudge defaults |
 | `list-users` / `get-user` | Members (`filter[email_eq]`, `filter[email_cont]`); use to fill in signer name and title |
 | `create-invitation` / `list-invitations` / `get-invitation` | Invite teammates (`invitation.email`, `inviter_email`, `access`) |
