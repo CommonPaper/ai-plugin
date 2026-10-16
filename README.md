@@ -52,6 +52,15 @@ Add this to `.vscode/mcp.json`:
 
 Start the server from the file or the MCP servers list, then sign in to Common Paper when prompted.
 
+### OpenAI Codex CLI
+
+```bash
+codex mcp add common-paper --url https://api.commonpaper.com/mcp
+codex mcp login common-paper
+```
+
+The first command adds the server to `~/.codex/config.toml`. The second opens a browser so you can sign in to Common Paper.
+
 Setup for other assistants (ChatGPT, Cursor, Notion, Perplexity, and more) is in [Connecting Common Paper to other AI assistants](https://help.commonpaper.com/en/articles/17271884-connecting-common-paper-to-other-ai-assistants).
 
 ## Install as a plugin
@@ -121,7 +130,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 
 | Problem | Fix |
 |---|---|
-| The Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Gemini CLI: run `/mcp auth common-paper`. VS Code: start `common-paper` from `.vscode/mcp.json` or the MCP servers list. Other clients: connect `https://api.commonpaper.com/mcp` from the client's MCP settings. |
+| The Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Gemini CLI: run `/mcp auth common-paper`. Codex CLI: run `codex mcp login common-paper`. VS Code: start `common-paper` from `.vscode/mcp.json` or the MCP servers list. Other clients: connect `https://api.commonpaper.com/mcp` from the client's MCP settings. |
 | An agreement you expect is missing | The API only covers agreements sent by your organization. Agreements you received from another organization aren't included. |
 | "You've reached your plan limit" on a new account | Usually means your email address isn't verified yet. Verify it, then try again. |
 | 404 on custom terms or custom templates | The feature isn't enabled for your organization. Contact Common Paper support. |
