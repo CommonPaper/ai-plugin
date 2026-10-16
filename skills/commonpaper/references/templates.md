@@ -10,7 +10,7 @@ This file documents template parameters by agreement type. The same field names 
 | Update a template | `update-template` (`pathParams.id` + `body`) | `PATCH /v1/templates/{id}` |
 | Archive a template | `archive-template` (restorable in the app) | none |
 | List attachments | `list-attachments` | none |
-| Upload an attachment | `upload-attachment_application_json` with `attachment.filename` set to a local PDF path; it returns a `curl_command` to run exactly as returned | `POST /v1/attachments` |
+| Upload an attachment | `upload-attachment` with `attachment.filename` set to a local PDF path; it returns a `curl_command` to run exactly as returned | `POST /v1/attachments` |
 | Archive an attachment | `archive-attachment` | none |
 
 The `curl` examples below are for the REST fallback (see `rest-api.md` for authentication). With the MCP tools, pass the same JSON object as the tool's `body`.

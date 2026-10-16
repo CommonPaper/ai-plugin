@@ -4,8 +4,8 @@
 |---|---|---|
 | List terms (metadata only) | `list-custom-terms` | `GET /v1/custom_terms` |
 | Get terms with full body | `get-custom-term` | `GET /v1/custom_terms/{id}` |
-| Create text terms | `create-custom-term_application_json` | `POST /v1/custom_terms` |
-| Publish a new text version | `create-custom-term-version_application_json` | `POST /v1/custom_terms/{id}/versions` |
+| Create text terms | `create-custom-term` | `POST /v1/custom_terms` |
+| Publish a new text version | `create-custom-term-version` | `POST /v1/custom_terms/{id}/versions` |
 | Rename terms | `update-custom-term` | `PATCH /v1/custom_terms/{id}` |
 | Upload Word (docx) terms | not supported over MCP; use REST multipart | `POST /v1/custom_terms` with `term_type=file` |
 | List / get custom templates | `list-custom-templates` / `get-custom-template` | `GET /v1/custom_templates[/{id}]` |
