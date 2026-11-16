@@ -4,7 +4,7 @@ Query, create, and manage your contracts in [Common Paper](https://commonpaper.c
 
 This repo also packages the server as a plugin for Claude Cowork, Claude Code, Cursor, Grok Build, and Gemini CLI. The plugin bundles two things:
 
-- **The Common Paper MCP connector** (`https://api.commonpaper.com/mcp`). You sign in with your Common Paper account through OAuth, so there's no API key to copy or store.
+- **The Common Paper MCP connector** (`https://mcp.commonpaper.com/v1`). You sign in with your Common Paper account through OAuth, so there's no API key to copy or store.
 - **A Common Paper skill** that teaches how Common Paper works: agreement statuses, the Cover Page + Standard Terms model, safe defaults (every agreement starts as a draft), template parameters for each agreement type, the rules for porting contract text into custom terms without altering it, and a guided onboarding flow for new accounts.
 
 For a few things the connector doesn't cover yet (filtering by company name or end date, uploading Word files as custom terms, and creating a brand-new account), the skill falls back to the Common Paper REST API.
@@ -31,7 +31,7 @@ For a few things the connector doesn't cover yet (filtering by company name or e
 
 ## Use with any MCP client
 
-- **Server URL:** `https://api.commonpaper.com/mcp`
+- **Server URL:** `https://mcp.commonpaper.com/v1`
 - **Transport:** Streamable HTTP
 - **Auth:** OAuth. Clients that support dynamic client registration connect automatically, and you sign in with your Common Paper account. No API key needed.
 
@@ -44,7 +44,7 @@ Add this to `.vscode/mcp.json`:
   "servers": {
     "common-paper": {
       "type": "http",
-      "url": "https://api.commonpaper.com/mcp"
+      "url": "https://mcp.commonpaper.com/v1"
     }
   }
 }
@@ -55,7 +55,7 @@ Start the server from the file or the MCP servers list, then sign in to Common P
 ### OpenAI Codex CLI
 
 ```bash
-codex mcp add common-paper --url https://api.commonpaper.com/mcp
+codex mcp add common-paper --url https://mcp.commonpaper.com/v1
 codex mcp login common-paper
 ```
 
@@ -130,7 +130,7 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 
 | Problem | Fix |
 |---|---|
-| The Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Gemini CLI: run `/mcp auth common-paper`. Codex CLI: run `codex mcp login common-paper`. VS Code: start `common-paper` from `.vscode/mcp.json` or the MCP servers list. Other clients: connect `https://api.commonpaper.com/mcp` from the client's MCP settings. |
+| The Common Paper tools aren't connected | Cowork: Customize > Connectors > Common Paper > Connect. Claude Code: run `/mcp`, choose `common-paper`, and sign in. Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. Gemini CLI: run `/mcp auth common-paper`. Codex CLI: run `codex mcp login common-paper`. VS Code: start `common-paper` from `.vscode/mcp.json` or the MCP servers list. Other clients: connect `https://mcp.commonpaper.com/v1` from the client's MCP settings. |
 | An agreement you expect is missing | The API only covers agreements sent by your organization. Agreements you received from another organization aren't included. |
 | "You've reached your plan limit" on a new account | Usually means your email address isn't verified yet. Verify it, then try again. |
 | 404 on custom terms or custom templates | The feature isn't enabled for your organization. Contact Common Paper support. |

@@ -3,7 +3,7 @@
   "name": "com.commonpaper/contracts",
   "description": "Create, send, negotiate, sign, and track contracts with Common Paper.",
   "title": "Common Paper",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "websiteUrl": "https://commonpaper.com",
   "repository": {
     "url": "https://github.com/CommonPaper/ai-plugin",
@@ -12,7 +12,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://api.commonpaper.com/mcp"
+      "url": "https://mcp.commonpaper.com/v1"
     }
   ]
 }
