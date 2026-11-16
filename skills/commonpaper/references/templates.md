@@ -1,8 +1,8 @@
 # Templates and Attachments
 
-This file documents template parameters by agreement type. The same field names apply whether you use the MCP tools or the REST API:
+This file documents template parameters by agreement type for the MCP template tools. The API routes they call are listed for reference:
 
-| Task | MCP tool | REST equivalent |
+| Task | MCP tool | API route |
 |---|---|---|
 | List templates | `list-templates` (`queryParams.full`, `page[number]`, `page[size]`) | `GET /v1/templates` |
 | Get one template | `get-template` | `GET /v1/templates/{id}` |
@@ -13,7 +13,7 @@ This file documents template parameters by agreement type. The same field names 
 | Upload an attachment | `upload-attachment_application_json` with `attachment.filename` set to a local PDF path; it returns a `curl_command` to run exactly as returned | `POST /v1/attachments` |
 | Archive an attachment | `archive-attachment` | none |
 
-The `curl` examples below are for the REST fallback (see `rest-api.md` for authentication). With the MCP tools, pass the same JSON object as the tool's `body`.
+Pass the JSON examples below as the tool's `body`.
 
 ## Templates
 
@@ -129,7 +129,7 @@ All other fields in the request body are optional and set the defaults pre-fille
 **v2-only CSA parameters:**
 - `include_security_policy_hitrust` — boolean
 - `include_ai_addendum` — boolean; requires `include_ai_addendum_attachment_id` (upload PDF first)
-- `include_ai_addendum_attachment_id` — UUID from `POST /v1/attachments`
+- `include_ai_addendum_attachment_id` — UUID from `upload-attachment_application_json`
 - `framework_terms_type` — **required for v2** — `"new"` (standard CP terms) or `"description"` (custom)
 - `include_dpa` — boolean; include DPA addendum (v2 only; requires `include_dpa_type`)
 - `include_dpa_type` — `"description"` (inline text) or `"attachment"` (requires `include_dpa_attachment_id`)
@@ -207,46 +207,40 @@ Common fee fields: `description`, `cost` (decimal as string), `quantity` (intege
 
 **Example: Create an NDA template**
 
-```bash
-curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "type": "NDA",
-    "name": "Standard Mutual NDA",
-    "governing_law_region": "Delaware",
-    "chosen_courts_region": "Delaware",
-    "term": 1,
-    "confidentiality_period": 2,
-    "purpose": "Evaluating a potential business relationship.",
-    "negotiations_allowed": true
-  }' \
-  "https://api.commonpaper.com/v1/templates"
+```json
+{
+  "type": "NDA",
+  "name": "Standard Mutual NDA",
+  "governing_law_region": "Delaware",
+  "chosen_courts_region": "Delaware",
+  "term": 1,
+  "confidentiality_period": 2,
+  "purpose": "Evaluating a potential business relationship.",
+  "negotiations_allowed": true
+}
 ```
 
 **Example: Create a CSA template**
 
-```bash
-curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "type": "CSA",
-    "name": "Standard Cloud Service Agreement",
-    "governing_law_region": "Delaware",
-    "general_cap_amount_type": "preceding",
-    "general_cap_preceding_amount": "1.0",
-    "include_security_policy": true,
-    "include_dpa": false,
-    "template_csa_order_form_attributes": {
-      "cloud_service_description": "SaaS platform for team collaboration",
-      "subscription_period": 1,
-      "subscription_period_unit": "year(s)",
-      "fee_period": "year",
-      "payment_period": 30,
-      "payment_period_unit": "day(s)",
-      "invoice_period": "annually"
-    }
-  }' \
-  "https://api.commonpaper.com/v1/templates"
+```json
+{
+  "type": "CSA",
+  "name": "Standard Cloud Service Agreement",
+  "governing_law_region": "Delaware",
+  "general_cap_amount_type": "preceding",
+  "general_cap_preceding_amount": "1.0",
+  "include_security_policy": true,
+  "include_dpa": false,
+  "template_csa_order_form_attributes": {
+    "cloud_service_description": "SaaS platform for team collaboration",
+    "subscription_period": 1,
+    "subscription_period_unit": "year(s)",
+    "fee_period": "year",
+    "payment_period": 30,
+    "payment_period_unit": "day(s)",
+    "invoice_period": "annually"
+  }
+}
 ```
 
 The response is a JSONAPI object. The new template's UUID is in `data.id`.
@@ -261,15 +255,12 @@ Pass only the fields you want to change. All the same fields from the create end
 
 **Example: Update an NDA template's jurisdiction**
 
-```bash
-curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "governing_law_region": "California",
-    "chosen_courts_region": "California",
-    "district_or_county": "Superior Court of Santa Clara County"
-  }' \
-  "https://api.commonpaper.com/v1/templates/{id}"
+```json
+{
+  "governing_law_region": "California",
+  "chosen_courts_region": "California",
+  "district_or_county": "Superior Court of Santa Clara County"
+}
 ```
 
 **Note**: There is no delete endpoint for templates. Templates can be renamed but not removed via the API.
@@ -280,24 +271,6 @@ curl -s -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
 POST /v1/attachments       — Upload a file attachment
 ```
 
-Attachments are files (PDFs, policies, addenda) that can be referenced from templates. Upload uses `multipart/form-data`.
-
-**Request fields (inside the `attachment` form object):**
-- `pdf` — the file to upload (required)
-- `name` — display name for the attachment (required)
-- `description` — optional description
-- `uploaded_by` — optional email of the uploader
-
-**Example:**
-
-```bash
-curl -s -X POST \
-  -H "Authorization: Bearer $(cat ~/.config/commonpaper/cp-api-token)" \
-  -F "attachment[name]=Security Policy" \
-  -F "attachment[description]=Our information security policy" \
-  -F "attachment[uploaded_by]=legal@company.com" \
-  -F "attachment[pdf]=@/path/to/security-policy.pdf" \
-  "https://api.commonpaper.com/v1/attachments"
-```
+Attachments are files (PDFs, policies, addenda) that can be referenced from templates. Upload them with `upload-attachment_application_json`: set `attachment.filename` to the local PDF path (plus optional `attachment.name` and `attachment.description`), then run the `curl_command` it returns exactly as returned.
 
 The response includes the attachment ID, which can then be referenced in template fields like `include_security_policy_attachment_id`, `include_dpa_attachment_id`, `include_acceptable_use_policy_attachment_id`, etc.
