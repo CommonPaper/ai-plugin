@@ -2,7 +2,7 @@
   "mcpServers": {
     "common-paper": {
       "type": "http",
-      "url": "https://api.commonpaper.com/mcp"
+      "url": "https://mcp.commonpaper.com/v1"
     }
   }
 }
