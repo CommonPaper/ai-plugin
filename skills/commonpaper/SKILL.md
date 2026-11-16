@@ -65,7 +65,7 @@ All tools take their inputs as `queryParams`, `pathParams` (the `id`), and/or `b
 
 ## Answering Questions
 
-List responses are JSONAPI: records are in `data[].attributes`, the total count is `meta.pagination.records`, and `data[].links.agreement_url` links to the agreement in the app. List calls return compact records unless `full=true`, which adds type-specific nested data such as `csa_order_form` fees.
+List responses are JSONAPI: records are in `data[].attributes`, the total count is `meta.pagination.records`, and `data[].links.agreement_url` links to the agreement in the app. List calls return compact records unless `full=true`, which adds type-specific nested data such as `csa_order_form` fees. Pages default to 15 records. When the user wants a full list or report, use `page[size]=100` and keep fetching while `meta.pagination.next` is set, so the answer isn't just the first page.
 
 - **"How many signed contracts do I have?"** `list-agreements` with `filter[status_eq]=signed` and `page[size]=1`, then read `meta.pagination.records`.
 - **"How many NDAs did we send this quarter?"** Add `filter[agreement_type_eq]` and `filter[created_at_gteq]`. Use the type value as `list-agreement-types` returns it.
