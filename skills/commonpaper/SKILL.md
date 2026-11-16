@@ -5,20 +5,15 @@ description: Query and manage contracts in Common Paper. Use when the user asks 
 
 # Common Paper
 
-This plugin connects Claude (or Cursor) to Common Paper in two ways:
-
-1. **The Common Paper MCP connector** (bundled in this plugin, OAuth sign-in, no API key). This is the default path for everything it supports.
-2. **The Common Paper REST API over `curl`** (API key). This is the fallback for things the connector can't do. Its details live in `references/rest-api.md`.
+This plugin connects Claude (or Cursor) to Common Paper through the Common Paper MCP connector (bundled in this plugin, OAuth sign-in, no API key).
 
 ## Security Rules
 
 **CRITICAL - follow these at all times:**
 
-1. **Never display an API key or token in chat output**, in code blocks, or in explanations, unless the user explicitly asks to see it. This includes keys returned by the `generate-api-key` tool or by account provisioning.
-2. **Never pass a token as a literal in a shell command** except the one-time write to the credentials file. Every REST call reads it with command substitution (see `references/rest-api.md`).
-3. **When showing the user a curl command**, replace the auth header with `-H "Authorization: Bearer <YOUR_API_TOKEN>"` and URL-encode brackets as `%5B` / `%5D`.
-4. **Sanitize user inputs** before putting them in URLs or filters. Strip or encode `&`, `=`, `#`, `?`, newlines, backticks, `$()`, and semicolons.
-5. **Confirm before any action that emails someone or changes a live agreement** (send, void, reassign, resend, invite). A Cowork user may be watching a task they didn't start, so state exactly what will happen before doing it.
+1. **Never use or ask for a Common Paper API key.** Everything goes through the MCP connector. Don't call `generate-api-key`.
+2. **Sanitize user inputs** before putting them in filters. Strip or encode `&`, `=`, `#`, `?`, newlines, backticks, `$()`, and semicolons.
+3. **Confirm before any action that emails someone or changes a live agreement** (send, void, reassign, resend, invite). A Cowork user may be watching a task they didn't start, so state exactly what will happen before doing it.
 
 ## Connecting
 
@@ -26,23 +21,15 @@ This plugin connects Claude (or Cursor) to Common Paper in two ways:
 
 - **If the tools are listed and work**, call `get-me` once to confirm who is signed in, and proceed.
 - **If the tools are listed but return an authentication error**, the user needs to sign in. In Claude Code: run `/mcp`, pick `common-paper`, and authenticate. In Cowork or claude.ai: Customize > Connectors > Common Paper > Connect. In Cursor: open the Customize page, find `common-paper` under MCP servers, and connect. In Gemini CLI: run `/mcp auth common-paper`. In any other client: connect the `common-paper` MCP server (`https://mcp.commonpaper.com/v1`) from that client's MCP or connector settings.
-- **If there are no Common Paper tools at all**, fall back to the REST API (`references/rest-api.md`), which asks for an API key from the Integrations tab at app.commonpaper.com.
+- **If there are no Common Paper tools at all**, ask the user to connect the `common-paper` MCP server as described above.
 
-Tokens are scoped to one organization. If the user can't find an agreement they expect, it was probably sent by another organization (they were the recipient), and the API only covers agreements sent by the signed-in organization.
+The connector is scoped to one organization. If the user can't find an agreement they expect, it was probably sent by another organization (they were the recipient), and the API only covers agreements sent by the signed-in organization.
 
-## When to use MCP vs REST
+## What the connector can't do
 
-| Need | Use |
-|---|---|
-| Counts, lists, and lookups by type, status, created date, or recipient email | MCP `list-agreements` |
-| Search by company name, end date, signer, deal value, or any other field, or sorting | REST filters (`references/rest-api.md`), or MCP paging with client-side filtering for small accounts |
-| Create, send, void, reassign, resend, download, share agreements | MCP |
-| Templates, attachments, org settings, users, invitations | MCP |
-| Custom terms from scratch, custom templates | MCP |
-| Porting an existing contract's text into custom terms, or uploading Word (docx) terms | REST (see `references/custom-terms-and-templates.md`) |
-| Provisioning a brand-new Common Paper account | REST (see `references/onboarding.md`) |
-
-If REST is needed and the MCP connector is connected, get a key with the `generate-api-key` tool instead of asking the user for one. If `curl` to `api.commonpaper.com` fails with a network error, the environment can't reach the REST API. Say so and do what the MCP tools allow. The same applies if you can't run shell commands at all (for example in a chat-only client): REST isn't available, so say which part of the request needs it and do the rest with the MCP tools.
+- **Filter by deal value, signer, or any field `list-agreements` doesn't list.** Narrow with the filters it has, then page with `page[size]=100` and filter client-side. Check `meta.pagination.records` first and tell the user if the scan will be long.
+- **Upload Word (docx) custom terms.** Ask the user to upload the file in the Common Paper app.
+- **Act on an organization other than the signed-in one**, including a newly provisioned account (see `references/onboarding.md`).
 
 ## MCP Tool Reference
 
@@ -52,7 +39,7 @@ All tools take their inputs as `queryParams`, `pathParams` (the `id`), and/or `b
 
 | Tool | Use |
 |---|---|
-| `list-agreements` | `queryParams`: `filter[agreement_type_eq]`, `filter[status_eq]`, `filter[created_at_gteq]` / `filter[created_at_lteq]` (ISO 8601 date-time), `filter[recipient_email_eq]` / `filter[recipient_email_cont]`, `full`, `page[number]`, `page[size]`. No other filters are accepted. |
+| `list-agreements` | `queryParams`: `filter[agreement_type_eq]`, `filter[status_eq]`, `filter[created_at_gteq]` / `filter[created_at_lteq]` (ISO 8601 date-time), `filter[recipient_email_eq]` / `filter[recipient_email_cont]`, `filter[recipient_name_cont]`, `filter[recipient_organization_cont]` / `filter[sender_organization_cont]` (case-insensitive), `filter[sent_date_gteq]` / `filter[sent_date_lteq]` and `filter[all_signed_date_gteq]` / `filter[all_signed_date_lteq]` (ISO 8601 date-time), `filter[end_date_gteq]` / `filter[end_date_lteq]` (YYYY-MM-DD), `sort` (comma-separated fields, `-` prefix for descending; nulls sort first when descending), `full`, `page[number]`, `page[size]`. No other filters are accepted. |
 | `get-agreement` | Full details for one agreement |
 | `create-agreement` | Create from a standard, uploaded PDF, or custom template (see Creating an Agreement) |
 | `update-draft-agreement` | Edit a draft in place (draft status only; see Editing a Draft) |
@@ -73,7 +60,6 @@ All tools take their inputs as `queryParams`, `pathParams` (the `id`), and/or `b
 | `list-organizations` / `get-organization` / `update-organization` | Org name, address, notice and nudge defaults |
 | `list-users` / `get-user` | Members (`filter[email_eq]`, `filter[email_cont]`); use to fill in signer name and title |
 | `create-invitation` / `list-invitations` / `get-invitation` | Invite teammates (`invitation.email`, `inviter_email`, `access`) |
-| `generate-api-key` | Mint a REST key for the signed-in user (treat as a secret) |
 
 **Templates, attachments, custom terms and templates:** see `references/templates.md` and `references/custom-terms-and-templates.md`.
 
@@ -83,11 +69,12 @@ List responses are JSONAPI: records are in `data[].attributes`, the total count 
 
 - **"How many signed contracts do I have?"** `list-agreements` with `filter[status_eq]=signed` and `page[size]=1`, then read `meta.pagination.records`.
 - **"How many NDAs did we send this quarter?"** Add `filter[agreement_type_eq]` and `filter[created_at_gteq]`. Use the type value as `list-agreement-types` returns it.
-- **"Do I have a contract with {Company}?"** The connector can't filter by company. Use the REST `_cont` filters on `recipient_organization` and `sender_organization` (see `references/rest-api.md`). If REST isn't available, page through `list-agreements` with `page[size]=100` and match both organization fields case-insensitively. Check `meta.pagination.records` first and tell the user if the scan will be long.
-- **"Do I have an active NDA with {Company}?"** Signed, type NDA, matching company, and not expired (`end_date` empty or on/after today).
+- **"Do I have a contract with {Company}?"** `list-agreements` with `filter[recipient_organization_cont]`, then again with `filter[sender_organization_cont]`, since either side could be the counterparty. If both come back empty, try `filter[recipient_email_cont]` with the company's email domain, because `recipient_organization` is sometimes blank.
+- **"Do I have an active NDA with {Company}?"** Signed, type NDA, matching company, and not expired (`end_date` empty or on/after today). Don't filter on the end date, because `filter[end_date_gteq]` also drops agreements with no end date. Check `end_date` client-side instead.
 - **"Who signed the deal with {Company}?"** Find the agreement, then report `sender_signer_name`, `sender_signer_email`, `recipient_name`, `recipient_email`.
 - **"What's our largest CSA?"** Signed CSAs with `full=true`, sorted by `ai_gmv`. `ai_gmv` can be `"0"` or null even when fees exist, so also check `summary` and `csa_order_form.fees`.
-- **"What renews in the next 90 days?"** Signed agreements with an `end_date` in the window, sorted by `end_date`. REST can filter this server-side; with MCP, page and filter client-side.
+- **"What renews in the next 90 days?"** `filter[status_eq]=signed`, `filter[end_date_gteq]` today, `filter[end_date_lteq]` 90 days out, `sort=end_date`.
+- **"What did we sign last quarter?"** `filter[status_eq]=signed` with `filter[all_signed_date_gteq]` / `filter[all_signed_date_lteq]`. For most recent first, add `sort=-all_signed_date` and keep the status filter, or unsigned agreements (null signed date) sort to the top.
 
 ## Agreement Statuses
 
@@ -99,7 +86,7 @@ Prefer `display_status` over `status` when presenting results.
 - **Closed without signing:** `voided_by_sender`, `declined_by_recipient`
 - **Outside the platform:** `sent_manually`
 
-`list-agreement-statuses` returns the full list. `references/rest-api.md` has a description of each.
+`list-agreement-statuses` returns the full list.
 
 ## Creating an Agreement
 
@@ -146,7 +133,7 @@ Confirm the changes with the user, make the edit, then show the draft link again
 ## Onboarding and Provisioning
 
 - **Onboarding Mode** ("set up my account", "onboard", "create all my templates"): a short Q&A, a proposed plan, then template creation. Read `references/onboarding.md` and follow it closely, including the "Not legal advice" disclaimer at the start and explicit confirmation before creating anything.
-- **Provisioning** ("create a new Common Paper account", "sign me up for Common Paper"): a two-step REST flow that creates a new org and API key. Also in `references/onboarding.md`. The MCP connector stays signed in to the user's existing org, so work on the new org goes through REST with the new key.
+- **Provisioning** ("create a new Common Paper account", "sign me up for Common Paper"): two calls to public signup endpoints that create a new org and its admin user. Also in `references/onboarding.md`. The MCP connector stays signed in to the user's existing org, so the new user has to sign in to the connector before any work on the new org.
 
 ## Presenting Results
 
@@ -159,7 +146,7 @@ Confirm the changes with the user, make the edit, then show the draft link again
 
 ## Error Handling
 
-- **401 / auth error:** MCP: the user needs to sign in again (see Connecting). REST: the key is invalid or revoked.
+- **401 / auth error:** the user needs to sign in again (see Connecting).
 - **400:** check the request shape. Field value errors name the field (for example a select value that isn't one of the options).
 - **403 or "You've reached your plan limit":** on a new account this almost always means the user's **email isn't verified**. Check `email_verified` with `list-users` and ask them to verify. Test agreements bypass plan limits but still need a verified email.
 - **404:** the resource doesn't exist, belongs to another org, or (for custom terms and custom templates) the feature isn't enabled for the org.

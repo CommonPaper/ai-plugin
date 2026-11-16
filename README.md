@@ -7,7 +7,7 @@ This repo also packages the server as a plugin for Claude Cowork, Claude Code, C
 - **The Common Paper MCP connector** (`https://mcp.commonpaper.com/v1`). You sign in with your Common Paper account through OAuth, so there's no API key to copy or store.
 - **A Common Paper skill** that teaches how Common Paper works: agreement statuses, the Cover Page + Standard Terms model, safe defaults (every agreement starts as a draft), template parameters for each agreement type, the rules for porting contract text into custom terms without altering it, and a guided onboarding flow for new accounts.
 
-For a few things the connector doesn't cover yet (filtering by company name or end date, uploading Word files as custom terms, and creating a brand-new account), the skill falls back to the Common Paper REST API.
+The connector doesn't cover uploading Word files as custom terms yet. Do that in the Common Paper app.
 
 ## What you can do
 
@@ -110,19 +110,19 @@ Then run `/mcp auth common-paper` in Gemini CLI and sign in to Common Paper.
 
 ### Upgrading from the standalone skill
 
-If you previously installed [CommonPaper/claude-skill](https://github.com/CommonPaper/claude-skill), you can remove it after installing the plugin. If the plugin ever needs an API key for the REST fallback, it copies a key saved by the old skill to `~/.config/commonpaper/cp-api-token` automatically.
+If you previously installed [CommonPaper/claude-skill](https://github.com/CommonPaper/claude-skill), you can remove it after installing the plugin. The plugin doesn't use API keys, so you can also delete any key the old skill saved and revoke it in the Integrations tab.
 
 ## Requirements
 
 - A [Common Paper](https://commonpaper.com) account
 - Any MCP client with OAuth support, or for the plugin: Claude Cowork, Claude Code, Cursor, Grok Build, or Gemini CLI
-- For the REST fallback only: `curl` and network access to `api.commonpaper.com`. Custom terms and custom templates must be enabled for your organization to use those features.
+- Custom terms and custom templates must be enabled for your organization to use those features.
 
 ## Security and privacy
 
 - The server uses OAuth. Your assistant acts as the Common Paper user who signed in and can only see that user's organization.
 - With the plugin, the assistant confirms before anything that sends an email or changes a live agreement (send, void, reassign, resend, invite), and creates agreements as drafts by default.
-- If the REST fallback needs an API key, the plugin mints one for the signed-in user with the connector (or asks you for one), asks whether to keep it for future sessions, stores it at `~/.config/commonpaper/cp-api-token` with owner-only permissions (deleting it at the end of the task if you said not to keep it), and never prints it in chat.
+- The plugin never asks for, stores, or reads an API key.
 - Contract text ported into custom terms is kept character-for-character. The assistant verifies the stored text after writing and never "fixes" typos or punctuation on its own.
 - Privacy policy: https://commonpaper.com/privacy-policy/ (questions: privacy@commonpaper.com)
 
@@ -134,9 +134,6 @@ If you previously installed [CommonPaper/claude-skill](https://github.com/Common
 | An agreement you expect is missing | The API only covers agreements sent by your organization. Agreements you received from another organization aren't included. |
 | "You've reached your plan limit" on a new account | Usually means your email address isn't verified yet. Verify it, then try again. |
 | 404 on custom terms or custom templates | The feature isn't enabled for your organization. Contact Common Paper support. |
-| REST fallback fails with a network error | Your environment can't reach `api.commonpaper.com` directly. The assistant will fall back to what the connector supports. |
-| Search by company name is slow on a large account | Without the REST fallback, the assistant has to page through agreements. Allow network access to `api.commonpaper.com` so it can filter server-side. |
-
 ## Support
 
 - Help center: [Common Paper and LLMs](https://help.commonpaper.com/en/articles/14627004-common-paper-and-llms)
@@ -156,7 +153,7 @@ mcp.json                            Common Paper MCP connector (Cursor)
 gemini-extension.json               Extension manifest and connector (Gemini CLI)
 registry/server.json                MCP Registry entry (com.commonpaper/contracts)
 skills/commonpaper/SKILL.md         Core skill
-skills/commonpaper/references/      REST API, templates, custom terms, onboarding details
+skills/commonpaper/references/      Templates, custom terms, onboarding details
 ```
 
 ## License

@@ -1,12 +1,12 @@
 # Account Provisioning and Onboarding
 
-**Which connection to use:** the Common Paper MCP connector is signed in as the user's existing Common Paper login, so it always acts on that user's current organization. Provisioning creates a *different* organization that only its new API key can reach. After provisioning, run everything for the new account (including Onboarding Mode) through the REST API with that key, as described in `rest-api.md` and `templates.md`. For onboarding an account the user is already signed in to, the MCP tools are the simpler path.
+**Which connection to use:** the Common Paper MCP connector is signed in as the user's existing Common Paper login, so it always acts on that user's current organization. Provisioning creates a *different* organization. To work on it (including Onboarding Mode), the new user signs in to the connector with the new account first.
 
 ## Provisioning a New Account (Agentic Signup)
 
 Use this flow when the user asks to create a brand-new Common Paper account from scratch via the API — phrases like "provision a new account", "create a fresh Common Paper account", "sign me up for Common Paper", or "create an agentic signup account for X". This is for net-new orgs, not for using an existing one.
 
-The flow is two unauthenticated public endpoints. No prior API key is needed.
+The flow is two public endpoints. No account or API key is needed; the second call uses the one-time provision key the first returns.
 
 ### Step 1: Mint a provision key
 
@@ -33,7 +33,7 @@ curl -s -X POST "https://api.commonpaper.com/v1/accounts" \
   -d '{"email":"NEW_USER_EMAIL","name":"NEW_USER_NAME","org_name":"NEW_ORG_NAME"}'
 ```
 
-All three fields are required. The new user is created as an admin of the new org. The response includes `api_key` (the production-bucket key the agent uses from here on), `user_id`, and `organization_id`. We also queue up two emails to the new user's address: One is a verification email and the other is a password reset email.
+All three fields are required. The new user is created as an admin of the new org. The response includes `api_key`, `user_id`, and `organization_id`. Don't save, use, or display `api_key`. We also queue up two emails to the new user's address: One is a verification email and the other is a password reset email.
 
 Possible non-201 responses:
 - **404 Not Found** — provision key doesn't exist
@@ -42,21 +42,9 @@ Possible non-201 responses:
 - **422 Unprocessable Entity** — required field missing
 - **502 Bad Gateway** — an upstream service failed; wait a moment and retry
 
-### Step 3: Install the new API key for the rest of the skill
+### Step 3: Sign in to the new account
 
-The new account's API key needs to be in `cp-api-token` for the skill to use it. If a token is already saved, back it up first.
-
-```bash
-if [ -f ~/.config/commonpaper/cp-api-token ]; then
-  cp ~/.config/commonpaper/cp-api-token ~/.config/commonpaper/cp-api-token.bak
-fi
-printf '%s' 'NEW_API_KEY' > ~/.config/commonpaper/cp-api-token
-chmod 600 ~/.config/commonpaper/cp-api-token
-```
-
-Validate with the standard test call (`GET /v1/agreements?page%5Bsize%5D=1`) and confirm 200 before continuing.
-
-**Tell the user** the new account is provisioned, mention that the new user will receive verification and password reset emails, and offer to restore the original token from the backup at the end of the session (or whenever they're done with the new account).
+**Tell the user** the new account is provisioned and that the new user will receive verification and password reset emails. To work on the new account, they set a password from the reset email, then sign out of the connector and sign back in as the new user (see Connecting in `SKILL.md`). The connector then acts on the new org instead of their existing one.
 
 ### What's immediately usable vs. blocked
 
@@ -73,7 +61,7 @@ Draft creation itself (`POST /v1/agreements` with `draft: true`) is not gated by
 
 ### Chaining with Onboarding Mode
 
-A common pattern is "provision a new account and then onboard it." Run Steps 1–3 above, then transition straight into Onboarding Mode below using the new account's token. The fresh org will have zero templates, so the full Q&A is appropriate.
+A common pattern is "provision a new account and then onboard it." Run Steps 1–3 above, then once the user is signed in to the connector as the new account, transition into Onboarding Mode below. The fresh org will have zero templates, so the full Q&A is appropriate.
 
 ## Onboarding Mode
 
@@ -85,7 +73,7 @@ Onboarding mode guides a brand-new user through setting up their entire Common P
 
 ### Phase 1: Account setup
 
-Confirm you can reach the right Common Paper account: the MCP connector for an existing account, or the saved REST token for a freshly provisioned one. Then fetch the company name with the `list-organizations` tool or `GET /v1/organizations` (`data[0].attributes.name`) — do not ask the user for it. Use this name to prefix template names in Phase 4. Then explain what onboarding will do: ask a few quick questions about their business, then create a sensible set of contract templates tailored to their answers.
+Confirm the connector is signed in to the right Common Paper account with `get-me`. Then fetch the company name with the `list-organizations` tool (`data[0].attributes.name`) — do not ask the user for it. Use this name to prefix template names in Phase 4. Then explain what onboarding will do: ask a few quick questions about their business, then create a sensible set of contract templates tailored to their answers.
 
 ### Phase 2: Q&A — show all questions, answer one at a time
 
@@ -145,7 +133,7 @@ Based on the user's answers, decide which templates to create and what key setti
 - **Governing law / courts**: Use the state they named.
 - **Liability cap (CSA)**: Default to 1× fees paid in the preceding 12 months — standard for most SaaS.
 - **DPA on CSA**: Do NOT set `include_dpa: true` on the CSA template — the reference requires a URL or attachment to be meaningful, and leaving it blank creates a broken addendum. Instead, create a standalone DPA template. Note in the plan that customers needing a DPA will sign that as a separate agreement.
-- **AI addendum on CSA**: Requires a PDF attachment uploaded first via the `upload-attachment_application_json` tool or `POST /v1/attachments`. If the user has an AI addendum PDF during onboarding, upload it and set `include_ai_addendum: true` with `include_ai_addendum_attachment_id` pointing to the returned attachment ID. If not, skip it and include it in the wrap-up to-do list.
+- **AI addendum on CSA**: Requires a PDF attachment uploaded first via the `upload-attachment_application_json` tool. If the user has an AI addendum PDF during onboarding, upload it and set `include_ai_addendum: true` with `include_ai_addendum_attachment_id` pointing to the returned attachment ID. If not, skip it and include it in the wrap-up to-do list.
 - **Security policy on CSA**: Enable `include_security_policy: true` if they have any certifications. **Also set `include_security_policy_include_annual_maintenance: true`** — without this flag, the certifications below won't render on the generated agreement. Then set the relevant cert flags based on what they listed: `include_security_policy_soc2`, `include_security_policy_soc2_type2`, `include_security_policy_iso27001`, `include_security_policy_hitrust`, `include_security_policy_penetration_testing`, etc. Note: HITRUST is a certification framework; HIPAA is a regulatory requirement — treat them separately.
 - **Payment terms**: Default to net-30 (30 days), annual invoicing. Adjust to monthly if they mentioned monthly billing.
 - **Free trial**: Enable on CSA order form if they said yes.
@@ -177,7 +165,7 @@ Ready to create these — does this look right, or would you like to change anyt
 
 ### Phase 4: Create the templates
 
-Before creating, verify the signer email with the `list-users` tool (`filter[email_eq]`) or `GET /v1/users` to confirm it exists in the account. If it doesn't match any user, ask the user to correct it — `default_signer_email` must be a valid account member.
+Before creating, verify the signer email with the `list-users` tool (`filter[email_eq]`) to confirm it exists in the account. If it doesn't match any user, ask the user to correct it — `default_signer_email` must be a valid account member.
 
 **Required nested fields by type** — these must be included or the API will return an error:
 - **CSA**: `template_csa_order_form_attributes.cloud_service_description`
@@ -187,7 +175,7 @@ Before creating, verify the signer email with the `list-users` tool (`filter[ema
 
 **CSA invoice payment trap**: when v2 CSA uses `payment_process_type: "invoice"`, you must set all three of `payment_process_type_invoice_type`, `payment_process_type_invoice_amount`, and `payment_process_type_invoice_duration` inside `template_csa_order_form_attributes`. Missing the amount/duration will not error on template create, but previewing an agreement built from the template will fail. For net-30 annual: `{ invoice_type: "annually", invoice_amount: 30, invoice_duration: "day" }`.
 
-**AI addendum**: requires uploading a PDF via `POST /v1/attachments` first, then setting `include_ai_addendum: true` and `include_ai_addendum_attachment_id` on the CSA template. Do not attempt to enable it without a valid attachment ID.
+**AI addendum**: requires uploading a PDF with `upload-attachment_application_json` first, then setting `include_ai_addendum: true` and `include_ai_addendum_attachment_id` on the CSA template. Do not attempt to enable it without a valid attachment ID.
 
 Create templates one at a time and show progress as each is created. Report each template's name and ID as it's created.
 
