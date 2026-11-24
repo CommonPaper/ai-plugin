@@ -145,7 +145,7 @@ Give the user a link when they ask where something is, or when a task has to be 
 | Agreement | `/agreements/{id}` (`.pdf` for the PDF) |
 | Edit a draft | `/agreements/{id}/edit` |
 | Agreement history and status | `/agreements/{id}/history` (`?tab=files` for file history) |
-| Agreement settings | `/agreements/{id}/settings/edit` |
+| Agreement settings, for admins and the agreement owner while it is still open | `/agreements/{id}/settings/edit` |
 | Start a new agreement | `/agreements/new?organization_id={org}&{type}_id={template id}` |
 | Start from an uploaded template | `/agreements/send_new_upload_unsigned?organization_id={org}&uploaded_template_id={id}` |
 | Templates list | `/organizations/{org}/templates` |
