@@ -135,6 +135,44 @@ Confirm the changes with the user, make the edit, then show the draft link again
 - **Onboarding Mode** ("set up my account", "onboard", "create all my templates"): a short Q&A, a proposed plan, then template creation. Read `references/onboarding.md` and follow it closely, including the "Not legal advice" disclaimer at the start and explicit confirmation before creating anything.
 - **Provisioning** ("create a new Common Paper account", "sign me up for Common Paper"): two calls to public signup endpoints that create a new org and its admin user. Also in `references/onboarding.md`. The MCP connector stays signed in to the user's existing org, so the new user has to sign in to the connector before any work on the new org.
 
+## Linking to Pages in the App
+
+Give the user a link when they ask where something is, or when a task has to be finished in the app. Use `links.agreement_url` when the tool response includes it. Otherwise add one of these paths to `https://app.commonpaper.com`. `{org}` is `organization_id` from `get-me`, and other ids come from the matching tool.
+
+| Page | Path |
+|---|---|
+| Agreements list | `/organizations/{org}/agreements` |
+| Agreement | `/agreements/{id}` (`.pdf` for the PDF) |
+| Edit a draft | `/agreements/{id}/edit` |
+| Agreement history and status | `/agreements/{id}/history` (`?tab=files` for file history) |
+| Agreement settings | `/agreements/{id}/settings/edit` |
+| Start a new agreement | `/agreements/new?organization_id={org}&{type}_id={template id}` |
+| Start from an uploaded template | `/agreements/send_new_upload_unsigned?organization_id={org}&uploaded_template_id={id}` |
+| Templates list | `/organizations/{org}/templates` |
+| Archived templates | `/organizations/{org}/templates/archived` |
+| Add a template | `/organizations/{org}/templates/new` |
+| Standard template | `/organizations/{org}/templates/{code}/{id}` (`/edit` to edit) |
+| Uploaded template | `/organizations/{org}/templates/uploaded/{id}` (`/edit` to edit) |
+| Custom template | `/organizations/{org}/custom_templates/{id}` (`/edit` to edit) |
+| Custom terms list | `/organizations/{org}/custom_terms` |
+| Custom terms | `/organizations/{org}/custom_terms/{id}/edit` |
+| Attachments list | `/organizations/{org}/attachments` |
+| Attachment | `/attachments/{id}` |
+| Public pages | `/organizations/{org}/agreement_request_pages` |
+| Team | `/organizations/{org}/users` |
+| Team member profile | `/organizations/{org}/users/{user id}/edit` |
+| Integrations and API keys | `/organizations/{org}/integrations` |
+| Organization settings, including subsidiaries and custom agreement types | `/organizations/{org}/edit` |
+| Billing | `/organizations/{org}/billing` |
+
+- **Template types:** `{type}` is the template's `type` from `list-templates`, such as `template_nda` or `template_software_license`. `{code}` is the same value without `template_`. For a custom template, `{type}_id` is `custom_template_id`, and the template needs a published version.
+- **Prefilling a new agreement:** `/agreements/new` accepts `agreement[recipient_name]`, `agreement[recipient_email]` and `agreement[recipient_organization]`.
+- **Filtering the agreements list:** add `search` (keyword), `agreement_type` (a standard type as `list-agreement-types` returns it), `template` (a standard or uploaded template id; custom template ids are ignored), `sender` (the owner's user id), `recipient_organization` or `recipient_name` (exact match), or `status`. Status values are `all_in_progress`, `in_progress`, `draft`, `completed`, `review_changes`, `sign_agreement`, `waiting_for_counterparty`, `awaiting_manual_send`, `counterparty_declined`, `voided` and `expired`. These aren't the values `list-agreement-statuses` returns.
+- **Sorting the agreements list:** `sort_by` (`counterparty`, `sender`, `type`, `last_activity` or `status`) with `sort=asc` or `sort=desc`.
+- **URL-encode every query key and value**, including brackets (`agreement%5Brecipient_name%5D=Jane%20Smith`).
+- **Don't guess other paths.** Many open only as pop-ups, and some change data when opened. To share an agreement for review, use `generate-shareable-link`.
+- The user has to be signed in, and some pages depend on their role. Without access they're sent back to another page with a warning.
+
 ## Presenting Results
 
 - Use tables or short summaries. Give exact counts from `meta.pagination.records`.
