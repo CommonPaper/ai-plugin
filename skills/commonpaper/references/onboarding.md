@@ -29,7 +29,7 @@ Rate limits: 5 req/minute and 50 req/day per IP. If the user is testing the flow
 ```bash
 curl -s -X POST "https://api.commonpaper.com/v1/accounts" \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_PROVISION_KEY" \
+  -H 'Authorization: Bearer YOUR_PROVISION_KEY' \
   -d '{"email":"NEW_USER_EMAIL","name":"NEW_USER_NAME","org_name":"NEW_ORG_NAME"}'
 ```
 
@@ -200,6 +200,8 @@ After all templates are created, show a summary table with direct links to each 
 
 Base URL: `https://app.commonpaper.com`
 
+Look up the org ID from `attributes.organization_id` on any template response (not users — that field may be null for new accounts).
+
 Present the summary like this:
 
 | Template | Link | Status |
@@ -215,7 +217,7 @@ Then display what **cannot be done via the API** and must be completed manually:
 **Here's what to do next in the app (app.commonpaper.com):**
 
 1. **Invite team members** — Add colleagues to your organization (Settings → Members).
-2. **Upload your logo** — Add company branding for agreements (Settings → Branding). Requires a Startup plan or higher.
+2. **Upload your logo** — Add company branding for agreements (Settings → Branding).
 3. **Connect Slack** — Get agreement notifications and updates directly in Slack (Settings → Integrations).
 4. **Set up Stripe** — If using Stripe billing workflows, connect your account (Settings → Integrations).
 5. **Configure webhooks** — Set up real-time event webhooks (Settings → Integrations).
@@ -227,11 +229,3 @@ Then display what **cannot be done via the API** and must be completed manually:
 Only include items 8 and 9 in the actual checklist when the user's onboarding answers triggered them.
 
 **Want to test before going live?** Set `test_agreement: true` on your first send. It sends a real email to the recipient and looks identical to a live agreement, but is marked as not legally binding and doesn't count against your monthly limit. Once you're confident everything looks right, send a live version (without `test_agreement`).
-
-Finally, always end onboarding with:
-
-> **Want a lawyer to review your templates?** Common Paper works with a legal partner who can review and refine your contracts.
-
-Look up the org ID from `attributes.organization_id` on any template response (not users — that field may be null for new accounts), then provide the direct link:
-
-`https://app.commonpaper.com/organizations/{org_id}/legal_support`

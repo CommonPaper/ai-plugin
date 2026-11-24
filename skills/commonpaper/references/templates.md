@@ -10,7 +10,7 @@ This file documents template parameters by agreement type for the MCP template t
 | Update a template | `update-template` (`pathParams.id` + `body`) | `PATCH /v1/templates/{id}` |
 | Archive a template | `archive-template` (restorable in the app) | none |
 | List attachments | `list-attachments` | none |
-| Upload an attachment | `upload-attachment_application_json` with `attachment.filename` set to a local PDF path; it returns a `curl_command` to run exactly as returned | `POST /v1/attachments` |
+| Upload an attachment | `upload-attachment_application_json` with `attachment.filename` set to a local PDF path; it returns a `curl_command` containing a single-use upload URL (see Transferring Files in `SKILL.md`) | `POST /v1/attachments` |
 | Archive an attachment | `archive-attachment` | none |
 
 Pass the JSON examples below as the tool's `body`.
@@ -271,6 +271,6 @@ Pass only the fields you want to change. All the same fields from the create end
 POST /v1/attachments       — Upload a file attachment
 ```
 
-Attachments are files (PDFs, policies, addenda) that can be referenced from templates. Upload them with `upload-attachment_application_json`: set `attachment.filename` to the local PDF path (plus optional `attachment.name` and `attachment.description`), then run the `curl_command` it returns exactly as returned.
+Attachments are files (PDFs, policies, addenda) that can be referenced from templates. Upload them with `upload-attachment_application_json`: set `attachment.filename` to the local PDF path (plus optional `attachment.name` and `attachment.description`), then upload the file as described in Transferring Files in `SKILL.md`.
 
 The response includes the attachment ID, which can then be referenced in template fields like `include_security_policy_attachment_id`, `include_dpa_attachment_id`, `include_acceptable_use_policy_attachment_id`, etc.
